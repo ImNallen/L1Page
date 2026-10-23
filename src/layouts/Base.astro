@@ -79,7 +79,8 @@ const nav = [
     <script is:inline>
       (() => {
         const ua = navigator.userAgent;
-        const os = /Android|iPhone|iPad|iPod|CrOS/.test(ua)
+        const iPadAsMac = /Macintosh/.test(ua) && navigator.maxTouchPoints > 1;
+        const os = iPadAsMac || /Android|iPhone|iPad|iPod|CrOS/.test(ua)
           ? null
           : /Windows/.test(ua)
             ? 'windows'
