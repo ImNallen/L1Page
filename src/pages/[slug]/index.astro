@@ -48,7 +48,7 @@ const history = product.releases.map((r) => ({ product, release: r }));
   {
     product.screenshot && (
       <div class="wrap stage">
-        <Window title={product.name} screenshot={product.screenshot} priority />
+        <Window screenshot={product.screenshot} priority />
       </div>
     )
   }

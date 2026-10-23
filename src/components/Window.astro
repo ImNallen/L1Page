@@ -2,16 +2,12 @@
 import { Image } from 'astro:assets';
 import type { Screenshot } from '../data/products';
 
-type Props = { title: string; screenshot: Screenshot; priority?: boolean };
+type Props = { screenshot: Screenshot; priority?: boolean };
 
-const { title, screenshot, priority = false } = Astro.props;
+const { screenshot, priority = false } = Astro.props;
 ---
 
 <figure class="window">
-  <div class="window__bar" aria-hidden="true">
-    <span class="window__dots"><span></span><span></span><span></span></span>
-    <span class="window__title">{title}</span>
-  </div>
   <Image
     src={screenshot.src}
     alt={screenshot.alt}
@@ -27,34 +23,7 @@ const { title, screenshot, priority = false } = Astro.props;
     overflow: hidden;
     border: 1px solid var(--window-border);
     border-radius: var(--radius-lg);
-    background: var(--window-bar);
     box-shadow: var(--window-shadow);
-  }
-
-  .window__bar {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    height: 48px;
-    padding-inline: 16px;
-    border-bottom: 1px solid #1a1a1a;
-  }
-
-  .window__dots {
-    display: flex;
-    gap: 10px;
-  }
-
-  .window__dots span {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: var(--window-dot);
-  }
-
-  .window__title {
-    color: var(--window-title);
-    font-size: 13px;
   }
 
   .window :global(img) {
@@ -64,25 +33,6 @@ const { title, screenshot, priority = false } = Astro.props;
   @media (max-width: 640px) {
     .window {
       border-radius: var(--radius);
-    }
-
-    .window__bar {
-      height: 32px;
-      gap: 12px;
-      padding-inline: 12px;
-    }
-
-    .window__dots {
-      gap: 6px;
-    }
-
-    .window__dots span {
-      width: 8px;
-      height: 8px;
-    }
-
-    .window__title {
-      font-size: 12px;
     }
   }
 </style>

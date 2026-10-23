@@ -14,10 +14,7 @@
   --primary-fg: #ffffff;
   --primary-hover: #2b2b2b;
   --logo-bg: #0a0a0a;
-  --window-bar: #0a0a0a;
   --window-border: #d9d9d9;
-  --window-dot: #2a2a2a;
-  --window-title: #8a8a8a;
   --window-shadow: 0 1px 2px rgb(0 0 0 / 0.04), 0 24px 48px -16px rgb(0 0 0 / 0.18);
   --focus: #0b63ce;
 
@@ -46,10 +43,7 @@
     --primary-fg: #0a0a0a;
     --primary-hover: #ffffff;
     --logo-bg: #f5f5f5;
-    --window-bar: #000000;
     --window-border: #222222;
-    --window-dot: #2a2a2a;
-    --window-title: #8f8f8f;
     --window-shadow: none;
     --focus: #52a2ff;
   }
