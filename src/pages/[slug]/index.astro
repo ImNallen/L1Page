@@ -1,0 +1,53 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Base from '../../layouts/Base.astro';
+import AppMock from '../../components/AppMock.astro';
+import FeatureList from '../../components/FeatureList.astro';
+import DownloadPanel from '../../components/DownloadPanel.astro';
+import { products, statusLabel, type Product } from '../../data/products';
+
+export const getStaticPaths = (() =>
+  products.map((product) => ({ params: { slug: product.slug }, props: { product } }))) satisfies GetStaticPaths;
+
+type Props = { product: Product };
+
+const { product } = Astro.props;
+const visuals: Record<string, typeof AppMock> = { data: AppMock };
+const Visual = visuals[product.slug];
+---
+
+<Base title={`${product.name}: ${product.tagline}`} description={`${product.tagline} ${product.summary}`}>
+  <section class="hero wrap" aria-labelledby="hero-title">
+    <h1 id="hero-title" class="display">{product.name}</h1>
+    <div class="hero__aside">
+      <p class="hero__tagline">{product.tagline}</p>
+      <p class="lede">{product.summary}</p>
+      <p class="tag" data-kind={product.availability.kind}>{statusLabel(product.availability)}</p>
+      <p class="actions">
+        <a class="button button--primary" href="#download">Downloads and platforms</a>
+      </p>
+    </div>
+  </section>
+
+  {
+    Visual && (
+      <div class="wrap stage">
+        <Visual />
+      </div>
+    )
+  }
+
+  <section class="wrap section" aria-labelledby="features-title">
+    <div class="section__head">
+      <h2 id="features-title">What it does</h2>
+    </div>
+    <FeatureList features={product.features} />
+  </section>
+
+  <section class="wrap section" id="download" aria-labelledby="download-title">
+    <div class="section__head">
+      <h2 id="download-title">Download {product.name}</h2>
+    </div>
+    <DownloadPanel product={product} />
+  </section>
+</Base>

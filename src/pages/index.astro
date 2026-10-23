@@ -1,6 +1,52 @@
 ---
+import Base from '../layouts/Base.astro';
+import AppMock from '../components/AppMock.astro';
+import ProductTable from '../components/ProductTable.astro';
+import FeatureList from '../components/FeatureList.astro';
+import { products, statusLabel } from '../data/products';
+
+const [first] = products;
+if (!first) throw new Error('The product registry is empty.');
 ---
-<html lang="en">
-  <head><meta charset="utf-8" /><title>L1</title></head>
-  <body><h1>L1</h1></body>
-</html>
+
+<Base
+  title="L1 Software: desktop tools for working with databases"
+  description="L1 is a suite of desktop apps from L1 Software. The first, L1 Data, is a database IDE for macOS, Windows, and Linux."
+>
+  <section class="hero wrap" aria-labelledby="hero-title">
+    <h1 id="hero-title" class="display">Desktop tools for people who work with databases.</h1>
+    <div class="hero__aside">
+      <p class="lede">
+        L1 is a suite of desktop apps from L1 Software. The first one is {first.name}, a database
+        IDE. It is still in development. {first.name} and the L1 apps after it will be released on
+        this site.
+      </p>
+      <p class="actions">
+        <a class="button button--primary" href={`/${first.slug}/`}>About {first.name}</a>
+        <a class="button" href="/download/">Downloads</a>
+      </p>
+    </div>
+  </section>
+
+  <div class="wrap stage">
+    <AppMock />
+  </div>
+
+  <section class="wrap section" aria-labelledby="apps-title">
+    <div class="section__head">
+      <h2 id="apps-title">Apps in the suite</h2>
+      <p>Each app is a separate download. New apps show up in this table when they ship.</p>
+    </div>
+    <ProductTable />
+  </section>
+
+  <section class="wrap section" aria-labelledby="first-title">
+    <div class="section__head">
+      <h2 id="first-title">{first.name}</h2>
+      <p>{first.summary}</p>
+      <p class="tag" data-kind={first.availability.kind}>{statusLabel(first.availability)}</p>
+    </div>
+    <FeatureList features={first.features.slice(0, 4)} />
+    <p><a class="more" href={`/${first.slug}/`}>Everything in {first.name}</a></p>
+  </section>
+</Base>

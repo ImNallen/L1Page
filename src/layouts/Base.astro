@@ -1,0 +1,100 @@
+---
+import Wordmark from '../components/Wordmark.astro';
+
+type Props = {
+  title: string;
+  description: string;
+};
+
+const { title, description } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL('/og.png', Astro.site);
+const path = Astro.url.pathname;
+const nav = [
+  { href: '/data/', label: 'L1 Data' },
+  { href: '/download/', label: 'Download' },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="theme-color" content="#e8ecef" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="L1 Software" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="The L1 wordmark above the headline Desktop tools for people who work with databases." />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="wrap site-header__inner">
+        <a class="site-header__home" href="/" aria-label="L1 Software home">
+          <Wordmark />
+        </a>
+        <nav aria-label="Main">
+          <ul class="site-nav">
+            {
+              nav.map((item) => (
+                <li>
+                  <a href={item.href} aria-current={path === item.href ? 'page' : undefined}>
+                    {item.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <main id="main">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="wrap site-footer__inner">
+        <p>© {new Date().getFullYear()} L1 Software</p>
+        <ul class="site-footer__links">
+          {nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+        </ul>
+      </div>
+    </footer>
+    <script is:inline>
+      (() => {
+        const ua = navigator.userAgent;
+        const os = /Android|iPhone|iPad|iPod|CrOS/.test(ua)
+          ? null
+          : /Windows/.test(ua)
+            ? 'windows'
+            : /Macintosh|Mac OS X/.test(ua)
+              ? 'macos'
+              : /Linux|X11/.test(ua)
+                ? 'linux'
+                : null;
+        for (const panel of document.querySelectorAll('[data-downloads]')) {
+          const primary = panel.querySelector('[data-primary]');
+          const builds = panel.querySelectorAll('[data-platform]');
+          const match = [...builds].find((b) => b.dataset.platform === os);
+          builds.forEach((b) => (b.hidden = b === match));
+          primary.hidden = !match;
+          if (!match) continue;
+          const link = primary.querySelector('a');
+          link.href = match.querySelector('a').href;
+          link.textContent = 'Download for ' + match.dataset.name;
+        }
+      })();
+    </script>
+  </body>
+</html>

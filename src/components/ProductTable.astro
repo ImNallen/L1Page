@@ -1,0 +1,35 @@
+---
+import { platformName, platformsOf, products, statusLabel } from '../data/products';
+
+const count = products.length;
+---
+
+<div class="grid-table">
+  <table>
+    <thead>
+      <tr>
+        <th scope="col" class="rn"><span class="visually-hidden">Row</span></th>
+        <th scope="col">App</th>
+        <th scope="col">What it is</th>
+        <th scope="col">Platforms</th>
+        <th scope="col">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        products.map((p, i) => (
+          <tr>
+            <td class="rn">{i + 1}</td>
+            <th scope="row">
+              <a href={`/${p.slug}/`}>{p.name}</a>
+            </th>
+            <td data-label="What it is">{p.tagline}</td>
+            <td data-label="Platforms">{platformsOf(p.availability).map((x) => platformName[x]).join(', ')}</td>
+            <td data-label="Status">{statusLabel(p.availability)}</td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+  <p class="grid-table__foot">{count} {count === 1 ? 'row' : 'rows'}</p>
+</div>

@@ -1,0 +1,59 @@
+---
+import { assertNever, buildName, platformName, statusLabel, type Product } from '../data/products';
+
+type Props = { product: Product };
+
+const { product } = Astro.props;
+const { availability } = product;
+
+const formatDate = (iso: string) =>
+  new Date(iso).toLocaleDateString('en-US', { dateStyle: 'long', timeZone: 'UTC' });
+---
+
+<div class="downloads">
+  {
+    (() => {
+      switch (availability.kind) {
+        case 'coming-soon':
+          return (
+            <div class="downloads__soon">
+              <p class="tag" data-kind={availability.kind}>{statusLabel(availability)}</p>
+              <p>
+                {product.name} is in development and there is nothing to download yet. When it is
+                released, builds for these platforms will be listed here.
+              </p>
+              <ul class="platforms">
+                {availability.platforms.map((p) => (
+                  <li>{platformName[p]}</li>
+                ))}
+              </ul>
+            </div>
+          );
+        case 'available':
+          return (
+            <div class="downloads__available" data-downloads>
+              <p class="downloads__meta">
+                <span class="tag" data-kind={availability.kind}>{statusLabel(availability)}</span>
+                Released {formatDate(availability.releasedAt)}.{' '}
+                <a href={availability.releaseNotesUrl}>Release notes</a>
+              </p>
+              <p class="downloads__primary" data-primary hidden>
+                <a class="button button--primary" href="#">
+                  Download
+                </a>
+              </p>
+              <ul class="builds" aria-label={`${product.name} builds`}>
+                {availability.downloads.map((d) => (
+                  <li data-platform={d.platform} data-name={buildName(d)}>
+                    <a href={d.url}>{buildName(d)}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          );
+        default:
+          return assertNever(availability);
+      }
+    })()
+  }
+</div>

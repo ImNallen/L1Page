@@ -1,0 +1,31 @@
+---
+import Base from '../../layouts/Base.astro';
+import DownloadPanel from '../../components/DownloadPanel.astro';
+import { products } from '../../data/products';
+---
+
+<Base
+  title="Download L1 apps"
+  description="Download builds of L1 apps for macOS, Windows, and Linux, or see which apps are not released yet."
+>
+  <section class="hero hero--compact wrap" aria-labelledby="hero-title">
+    <h1 id="hero-title" class="display">Downloads</h1>
+    <div class="hero__aside">
+      <p class="lede">Every L1 app and its builds. This page picks the build for your operating system when one exists.</p>
+    </div>
+  </section>
+
+  {
+    products.map((product) => (
+      <section class="wrap section section--split" aria-labelledby={`dl-${product.slug}`}>
+        <div class="section__head">
+          <h2 id={`dl-${product.slug}`}>
+            <a href={`/${product.slug}/`}>{product.name}</a>
+          </h2>
+          <p>{product.tagline}</p>
+        </div>
+        <DownloadPanel product={product} />
+      </section>
+    ))
+  }
+</Base>
