@@ -1,0 +1,151 @@
+---
+import AppTile from './AppTile.astro';
+import Icon from './Icon.astro';
+import { latestRelease, platformName, primaryBuilds, products } from '../data/products';
+
+const rows = products.map((product) => ({ product, release: latestRelease(product) }));
+const anyReleased = rows.some((r) => r.release);
+---
+
+<ul class="apps" role="list" data-downloads={anyReleased}>
+  {
+    rows.map(({ product, release }) => (
+      <li class="app">
+        <AppTile icon={product.icon} size={44} />
+        <div class="app__text">
+          <h3 class="app__name">{product.name}</h3>
+          <p class="app__tagline">{product.tagline}</p>
+        </div>
+        {release ? (
+          <p class="app__version mono">v{release.version}</p>
+        ) : (
+          <p class="app__version app__version--soon">Coming soon</p>
+        )}
+        <a class="app__details chevron" href={`/${product.slug}/`}>
+          Details<span class="visually-hidden"> about {product.name}</span>
+          <Icon name="chevron" size={14} />
+        </a>
+        {release && (
+          <div class="app__download" data-os-switch>
+            <a class="button button--md" href={`/${product.slug}/#download`} data-os-default>
+              <Icon name="download" />
+              Download<span class="visually-hidden"> {product.name}</span>
+            </a>
+            {primaryBuilds(release).map((d) => (
+              <a
+                class="button button--md"
+                href={d.url}
+                data-os={d.platform}
+                aria-label={`Download ${product.name} for ${platformName[d.platform]}`}
+                hidden
+              >
+                <Icon name="download" />
+                Download
+              </a>
+            ))}
+          </div>
+        )}
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .apps {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    column-gap: 24px;
+  }
+
+  .apps[data-downloads='true'] {
+    grid-template-columns: auto 1fr auto auto auto;
+  }
+
+  .app {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    align-items: center;
+    min-height: 95px;
+    padding-block: 16px;
+  }
+
+  .app__text {
+    min-width: 0;
+  }
+
+  .app__name {
+    font-size: 17px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1.4;
+  }
+
+  .app__tagline {
+    color: var(--fg-muted);
+  }
+
+  .app__version {
+    justify-self: end;
+    color: var(--fg-muted);
+    padding-right: 40px;
+  }
+
+  .app__version--soon {
+    font-size: 13px;
+  }
+
+  .app__details {
+    color: var(--fg-muted);
+    transition: color 120ms ease;
+  }
+
+  .app__details:hover {
+    color: var(--fg);
+  }
+
+  .app__download {
+    display: flex;
+    justify-content: end;
+  }
+
+  @media (max-width: 720px) {
+    .apps,
+    .apps[data-downloads='true'] {
+      display: block;
+    }
+
+    .app {
+      grid-template-columns: auto 1fr auto auto;
+      grid-template-areas:
+        'tile text text text'
+        '. version details download';
+      column-gap: 16px;
+      row-gap: 12px;
+      padding-block: 20px;
+    }
+
+    .app :global(.tile) {
+      grid-area: tile;
+      align-self: start;
+    }
+
+    .app__text {
+      grid-area: text;
+    }
+
+    .app__version {
+      grid-area: version;
+      justify-self: start;
+      padding-right: 0;
+    }
+
+    .app__details {
+      grid-area: details;
+    }
+
+    .app__download {
+      grid-area: download;
+    }
+  }
+</style>

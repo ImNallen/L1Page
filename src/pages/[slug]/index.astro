@@ -1,0 +1,176 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Base from '../../layouts/Base.astro';
+import AppTile from '../../components/AppTile.astro';
+import DownloadBlock from '../../components/DownloadBlock.astro';
+import FeatureList from '../../components/FeatureList.astro';
+import Icon from '../../components/Icon.astro';
+import ReleaseActions from '../../components/ReleaseActions.astro';
+import ReleaseList from '../../components/ReleaseList.astro';
+import Window from '../../components/Window.astro';
+import { latestRelease, listPlatforms, products, type Product } from '../../data/products';
+
+export const getStaticPaths = (() =>
+  products.map((product) => ({ params: { slug: product.slug }, props: { product } }))) satisfies GetStaticPaths;
+
+type Props = { product: Product };
+
+const { product } = Astro.props;
+const release = latestRelease(product);
+const history = product.releases.map((r) => ({ product, release: r }));
+---
+
+<Base title={`${product.name}: ${product.tagline}`} description={`${product.tagline} ${product.summary}`}>
+  <section class="intro wrap" aria-labelledby="hero-title">
+    <AppTile icon={product.icon} size={64} />
+    <h1 id="hero-title">{product.name}</h1>
+    <p class="intro__tagline">{product.tagline}</p>
+    <p class="intro__summary">{product.summary}</p>
+    {
+      release ? (
+        <ReleaseActions product={product} release={release}>
+          <a class="button button--lg" href="#download">
+            All builds
+            <Icon name="chevron" />
+          </a>
+        </ReleaseActions>
+      ) : (
+        <div class="actions">
+          <p class="intro__soon">
+            <span class="intro__soon-dot" aria-hidden="true"></span>Coming soon
+          </p>
+          <p class="actions__note">Planned for {listPlatforms(product.platforms)}.</p>
+        </div>
+      )
+    }
+  </section>
+
+  {
+    product.screenshot && (
+      <div class="wrap stage">
+        <Window screenshot={product.screenshot} priority />
+      </div>
+    )
+  }
+
+  <section class="wrap section" aria-labelledby="features-title">
+    <div class="section-head">
+      <h2 id="features-title">What it does</h2>
+    </div>
+    <FeatureList features={product.features} />
+  </section>
+
+  <div class="wrap">
+    <section class="section split" id="download" aria-labelledby="download-title">
+      <div class="section-head">
+        <h2 id="download-title">Download</h2>
+      </div>
+      <DownloadBlock product={product} />
+    </section>
+
+    <section class="section split" id="releases" aria-labelledby="releases-title">
+      <div class="section-head">
+        <div>
+          <h2 id="releases-title">Release history</h2>
+          <p><a class="link" href="/release-notes/">All release notes</a></p>
+        </div>
+      </div>
+      {
+        history.length > 0 ? (
+          <ReleaseList entries={history} />
+        ) : (
+          <p class="empty muted">No releases yet. The first release and its notes will appear here.</p>
+        )
+      }
+    </section>
+  </div>
+</Base>
+
+<style>
+  .intro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 96px;
+    text-align: center;
+  }
+
+  h1 {
+    margin-top: 24px;
+    font-size: clamp(36px, 4vw + 16px, 56px);
+    line-height: 1.08;
+    letter-spacing: -0.045em;
+  }
+
+  .intro__tagline {
+    margin-top: 14px;
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: -0.015em;
+  }
+
+  .intro__summary {
+    max-width: 620px;
+    margin-top: 12px;
+    color: var(--fg-muted);
+    font-size: 16px;
+  }
+
+  .intro :global(.actions) {
+    margin-top: 36px;
+  }
+
+  .intro__soon {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    height: 48px;
+    padding-inline: 20px;
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius);
+    font-weight: 500;
+  }
+
+  .intro__soon-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--fg-muted);
+  }
+
+  .stage {
+    margin-top: 72px;
+  }
+
+  .split {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 24px;
+    padding-block: 48px;
+  }
+
+  .split .section-head {
+    margin-bottom: 0;
+  }
+
+  .empty {
+    padding: 20px 24px;
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius-lg);
+  }
+
+  #download,
+  #releases {
+    scroll-margin-top: 24px;
+  }
+
+  @media (max-width: 720px) {
+    .intro {
+      padding-top: 64px;
+    }
+
+    .split {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

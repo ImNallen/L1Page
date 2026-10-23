@@ -1,0 +1,25 @@
+---
+import { listPlatforms, platformName, type Product } from '../data/products';
+
+type Props = { product: Product };
+
+const { product } = Astro.props;
+const others = (p: (typeof product.platforms)[number]) => product.platforms.filter((x) => x !== p);
+---
+
+<div class="actions" data-os-switch>
+  <div class="actions__buttons">
+    <slot />
+  </div>
+  <p class="actions__note" data-os-default>
+    {product.name} is coming soon to {listPlatforms(product.platforms)}.
+  </p>
+  {
+    product.platforms.map((p) => (
+      <p class="actions__note" data-os={p} hidden>
+        {product.name} is coming soon to {platformName[p]}.
+        {others(p).length > 0 && ` Also planned for ${listPlatforms(others(p))}.`}
+      </p>
+    ))
+  }
+</div>

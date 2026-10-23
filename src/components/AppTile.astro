@@ -1,0 +1,19 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+type Props = { icon: ImageMetadata; size: number };
+
+const { icon, size } = Astro.props;
+---
+
+<Image class="tile" src={icon} width={size} height={size} alt="" style={`--size: ${size}px`} />
+
+<style>
+  .tile {
+    flex: none;
+    width: var(--size);
+    height: var(--size);
+    border-radius: calc(var(--size) * 0.22);
+  }
+</style>

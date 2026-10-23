@@ -1,0 +1,38 @@
+---
+import { Image } from 'astro:assets';
+import type { Screenshot } from '../data/products';
+
+type Props = { screenshot: Screenshot; priority?: boolean };
+
+const { screenshot, priority = false } = Astro.props;
+---
+
+<figure class="window">
+  <Image
+    src={screenshot.src}
+    alt={screenshot.alt}
+    widths={[640, 960, 1216, 1440]}
+    sizes="(min-width: 1264px) 1216px, calc(100vw - 40px)"
+    priority={priority}
+  />
+</figure>
+
+<style>
+  .window {
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid var(--window-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--window-shadow);
+  }
+
+  .window :global(img) {
+    width: 100%;
+  }
+
+  @media (max-width: 640px) {
+    .window {
+      border-radius: var(--radius);
+    }
+  }
+</style>
