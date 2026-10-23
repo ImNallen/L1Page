@@ -1,31 +1,69 @@
 ---
 import Base from '../../layouts/Base.astro';
-import DownloadPanel from '../../components/DownloadPanel.astro';
-import { products } from '../../data/products';
+import AppTile from '../../components/AppTile.astro';
+import DownloadBlock from '../../components/DownloadBlock.astro';
+import { listNames, products } from '../../data/products';
 ---
 
-<Base
-  title="Download L1 apps"
-  description="Download builds of L1 apps for macOS, Windows, and Linux, or see which apps are not released yet."
->
-  <section class="hero hero--compact wrap" aria-labelledby="hero-title">
-    <h1 id="hero-title" class="display">Downloads</h1>
-    <div class="hero__aside">
-      <p class="lede">Every L1 app and its builds. This page picks the build for your operating system when one exists.</p>
-    </div>
+<Base title="Download L1 apps" description={`Builds of ${listNames(products)} for macOS, Windows, and Linux.`}>
+  <section class="wrap page-head" aria-labelledby="hero-title">
+    <h1 id="hero-title">Download</h1>
+    <p class="muted">Every L1 app and its builds for the latest version.</p>
   </section>
 
-  {
-    products.map((product) => (
-      <section class="wrap section section--split" aria-labelledby={`dl-${product.slug}`}>
-        <div class="section__head">
-          <h2 id={`dl-${product.slug}`}>
-            <a href={`/${product.slug}/`}>{product.name}</a>
-          </h2>
-          <p>{product.tagline}</p>
-        </div>
-        <DownloadPanel product={product} />
-      </section>
-    ))
-  }
+  <div class="wrap downloads">
+    {
+      products.map((product) => (
+        <section class="download" aria-labelledby={`dl-${product.slug}`}>
+          <div class="download__head">
+            <AppTile icon={product.icon} size={44} />
+            <div>
+              <h2 id={`dl-${product.slug}`}>
+                <a href={`/${product.slug}/`}>{product.name}</a>
+              </h2>
+              <p class="muted">{product.tagline}</p>
+            </div>
+          </div>
+          <DownloadBlock product={product} />
+        </section>
+      ))
+    }
+  </div>
 </Base>
+
+<style>
+  .downloads {
+    margin-top: 48px;
+  }
+
+  .download {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: 24px 48px;
+    padding-block: 32px;
+    border-top: 1px solid var(--border);
+  }
+
+  .download__head {
+    display: flex;
+    align-items: start;
+    gap: 16px;
+  }
+
+  h2 {
+    font-size: 17px;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  h2 a:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  @media (max-width: 720px) {
+    .download {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

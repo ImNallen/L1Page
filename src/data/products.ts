@@ -93,7 +93,7 @@ const data: Product = {
 const git: Product = {
   slug: 'git',
   name: 'L1 Git',
-  tagline: 'A desktop Git client with a commit graph, diffs, and safe fast-forwards.',
+  tagline: 'A desktop Git client with a commit graph, diffs, and fast-forward-only updates.',
   summary:
     'Open local repositories and read their branches, tags, stashes, and commit graph. Inspect any commit, compare two commits, and fetch every remote. L1 Git fast-forwards branches that are behind and never merges, rebases, commits, or pushes.',
   icon: gitIcon,

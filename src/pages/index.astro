@@ -1,51 +1,151 @@
 ---
 import Base from '../layouts/Base.astro';
-import AppMock from '../components/AppMock.astro';
-import ProductTable from '../components/ProductTable.astro';
-import FeatureList from '../components/FeatureList.astro';
-import { featured as first, latestRelease } from '../data/products';
+import AppList from '../components/AppList.astro';
+import ComingSoonActions from '../components/ComingSoonActions.astro';
+import Icon from '../components/Icon.astro';
+import ReleaseActions from '../components/ReleaseActions.astro';
+import Window from '../components/Window.astro';
+import { featured, latestRelease, listNames, products } from '../data/products';
 
-const release = latestRelease(first);
-const firstStatus = release ? `Version ${release.version} is out now.` : 'It is still in development.';
+const release = latestRelease(featured);
 ---
 
 <Base
-  title="L1 Software: desktop tools for working with databases"
-  description="L1 is a suite of desktop apps from L1 Software. The first, L1 Data, is a database IDE for macOS, Windows, and Linux."
+  title="L1 Software: every L1 app, in one place"
+  description={`Download ${listNames(products)} for macOS, Windows, and Linux, and read their release notes.`}
 >
   <section class="hero wrap" aria-labelledby="hero-title">
-    <h1 id="hero-title" class="display">Desktop tools for people who work with databases.</h1>
-    <div class="hero__aside">
-      <p class="lede">
-        L1 is a suite of desktop apps from L1 Software. The first one is {first.name}, a database
-        IDE. {firstStatus} {first.name} and the L1 apps after it are released on this site.
-      </p>
-      <p class="actions">
-        <a class="button button--primary" href={`/${first.slug}/`}>About {first.name}</a>
-        <a class="button" href="/download/">Downloads</a>
-      </p>
-    </div>
+    <p class="pill"><span class="pill__dot" aria-hidden="true"></span>The L1 suite</p>
+    <h1 id="hero-title">Every L1 app, in one place</h1>
+    <p class="hero__lede">
+      <span>Download {listNames(products)} from one site.</span>{' '}
+      <span>Each app lists its latest version and release notes.</span>
+    </p>
+    {
+      release ? (
+        <ReleaseActions product={featured} release={release}>
+          <a class="button button--lg" href="#apps">
+            Browse apps
+            <Icon name="chevron" />
+          </a>
+        </ReleaseActions>
+      ) : (
+        <ComingSoonActions product={featured}>
+          <a class="button button--primary button--lg" href={`/${featured.slug}/`}>
+            See {featured.name}
+          </a>
+          <a class="button button--lg" href="#apps">
+            Browse apps
+            <Icon name="chevron" />
+          </a>
+        </ComingSoonActions>
+      )
+    }
   </section>
 
-  <div class="wrap stage">
-    <AppMock />
-  </div>
+  {
+    featured.screenshot && (
+      <div class="wrap stage">
+        <Window title={featured.name} screenshot={featured.screenshot} priority />
+      </div>
+    )
+  }
 
-  <section class="wrap section" aria-labelledby="apps-title">
-    <div class="section__head">
-      <h2 id="apps-title">Apps in the suite</h2>
-      <p>Each app is a separate download. New apps show up in this table when they ship.</p>
+  <section class="wrap section" id="apps" aria-labelledby="apps-title">
+    <div class="section-head">
+      <div>
+        <h2 id="apps-title">Apps</h2>
+        <p>Every app in the suite, with its latest version.</p>
+      </div>
+      <a class="link" href="/release-notes/">Release notes</a>
     </div>
-    <ProductTable />
-  </section>
-
-  <section class="wrap section" aria-labelledby="first-title">
-    <div class="section__head">
-      <h2 id="first-title">{first.name}</h2>
-      <p>{first.summary}</p>
-      <p class="tag">{release ? `Version ${release.version}` : 'Not released yet'}</p>
-    </div>
-    <FeatureList features={first.features.slice(0, 4)} />
-    <p><a class="more" href={`/${first.slug}/`}>Everything in {first.name}</a></p>
+    <AppList />
   </section>
 </Base>
+
+<style>
+  .hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 123px;
+    text-align: center;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    height: 32px;
+    padding-inline: 13px;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    color: var(--fg-muted);
+    font-size: 13px;
+  }
+
+  .pill__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--live);
+  }
+
+  h1 {
+    margin-top: 26px;
+    font-size: clamp(40px, 6vw + 12px, 64px);
+    font-weight: 600;
+    line-height: 1.08;
+    letter-spacing: -0.045em;
+    text-wrap: balance;
+  }
+
+  .hero__lede {
+    margin-top: 22px;
+    color: var(--fg-muted);
+    font-size: 18px;
+    line-height: 28px;
+    letter-spacing: -0.012em;
+  }
+
+  .hero__lede span {
+    display: block;
+  }
+
+  .hero :global(.actions) {
+    margin-top: 42px;
+  }
+
+  .stage {
+    margin-top: 80px;
+  }
+
+  #apps {
+    padding-top: 144px;
+    padding-bottom: 84px;
+    scroll-margin-top: 24px;
+  }
+
+  @media (max-width: 640px) {
+    .hero {
+      padding-top: 72px;
+    }
+
+    .hero__lede {
+      font-size: 16px;
+      line-height: 26px;
+    }
+
+    .hero__lede span {
+      display: inline;
+    }
+
+    .stage {
+      margin-top: 56px;
+    }
+
+    #apps {
+      padding-top: 88px;
+    }
+  }
+</style>

@@ -1,0 +1,32 @@
+---
+import black from '../assets/logo/lone-mark-black.svg';
+import white from '../assets/logo/lone-mark-white.svg';
+
+type Props = { size: number };
+
+const { size } = Astro.props;
+---
+
+<span class="logo" style={`--size: ${size}px`}>
+  <picture>
+    <source srcset={white.src} media="(prefers-color-scheme: light)" />
+    <img src={black.src} width={white.width} height={white.height} alt="" />
+  </picture>
+</span>
+
+<style>
+  .logo {
+    display: inline-grid;
+    place-items: center;
+    flex: none;
+    width: var(--size);
+    height: var(--size);
+    border-radius: calc(var(--size) * 0.24);
+    background: var(--logo-bg);
+  }
+
+  img {
+    width: calc(var(--size) * 0.74);
+    height: auto;
+  }
+</style>

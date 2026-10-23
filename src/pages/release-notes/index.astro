@@ -1,0 +1,63 @@
+---
+import Base from '../../layouts/Base.astro';
+import AppList from '../../components/AppList.astro';
+import ReleaseList from '../../components/ReleaseList.astro';
+import { allReleases, listNames, products } from '../../data/products';
+
+const entries = allReleases();
+---
+
+<Base title="Release notes | L1 Software" description={`Every release of ${listNames(products)}, newest first.`}>
+  <section class="wrap page-head" aria-labelledby="hero-title">
+    <h1 id="hero-title">Release notes</h1>
+    <p class="muted">Every release of every L1 app, newest first.</p>
+  </section>
+
+  <div class="wrap notes">
+    {
+      entries.length > 0 ? (
+        <ReleaseList entries={entries} showApp />
+      ) : (
+        <div class="empty">
+          <p class="empty__title">No releases yet</p>
+          <p class="muted">
+            {listNames(products)} are in development. Each release will be listed here with its notes.
+          </p>
+        </div>
+      )
+    }
+  </div>
+
+  {
+    entries.length === 0 && (
+      <section class="wrap section" aria-labelledby="apps-title">
+        <div class="section-head">
+          <h2 id="apps-title">Apps</h2>
+        </div>
+        <AppList />
+      </section>
+    )
+  }
+</Base>
+
+<style>
+  .notes {
+    margin-top: 48px;
+  }
+
+  .empty {
+    padding: 48px 24px;
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius-lg);
+    text-align: center;
+  }
+
+  .empty__title {
+    font-size: 17px;
+    font-weight: 500;
+  }
+
+  .empty .muted {
+    margin-top: 6px;
+  }
+</style>

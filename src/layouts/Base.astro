@@ -1,9 +1,8 @@
 ---
-import '@fontsource-variable/archivo/wdth.css';
-import '@fontsource-variable/martian-mono/wdth.css';
+import '@fontsource-variable/inter/opsz.css';
+import '@fontsource-variable/jetbrains-mono/wght.css';
 import '../styles/global.css';
-import Wordmark from '../components/Wordmark.astro';
-import { products } from '../data/products';
+import Logo from '../components/Logo.astro';
 
 type Props = {
   title: string;
@@ -16,8 +15,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = new URL('/og.png', Astro.site);
 const path = Astro.url.pathname;
 const nav = [
-  ...products.map((p) => ({ href: `/${p.slug}/`, label: p.name })),
-  { href: '/download/', label: 'Download' },
+  { href: '/#apps', label: 'Apps' },
+  { href: '/release-notes/', label: 'Release notes' },
 ];
 ---
 
@@ -31,7 +30,9 @@ const nav = [
     {indexable ? <link rel="canonical" href={canonical} /> : <meta name="robots" content="noindex" />}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <meta name="theme-color" content="#e8ecef" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="L1 Software" />
     <meta property="og:title" content={title} />
@@ -40,18 +41,20 @@ const nav = [
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="The L1 wordmark above the headline Desktop tools for people who work with databases." />
+    <meta property="og:image:alt" content="The L1 logo, the headline Every L1 app, in one place, and the L1 Data, L1 Git, and L1 Code icons." />
     <meta name="twitter:card" content="summary_large_image" />
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
     <header class="site-header">
       <div class="wrap site-header__inner">
-        <a class="site-header__home" href="/" aria-label="L1 Software home">
-          <Wordmark />
+        <a class="brand" href="/">
+          <Logo size={26} />
+          <span>L1</span>
+          <span class="visually-hidden">Software, home</span>
         </a>
         <nav aria-label="Main">
-          <ul class="site-nav">
+          <ul class="site-nav" role="list">
             {
               nav.map((item) => (
                 <li>
@@ -61,6 +64,11 @@ const nav = [
                 </li>
               ))
             }
+            <li>
+              <a class="button" href="/download/" aria-current={path === '/download/' ? 'page' : undefined}>
+                Download
+              </a>
+            </li>
           </ul>
         </nav>
       </div>
@@ -70,9 +78,13 @@ const nav = [
     </main>
     <footer class="site-footer">
       <div class="wrap site-footer__inner">
-        <p>© {new Date().getFullYear()} L1 Software</p>
-        <ul class="site-footer__links">
+        <a class="site-footer__brand" href="/">
+          <Logo size={20} />
+          l1software.app
+        </a>
+        <ul class="site-footer__links" role="list">
           {nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+          <li><a href="/download/">Download</a></li>
         </ul>
       </div>
     </footer>
@@ -89,16 +101,103 @@ const nav = [
               : /Linux|X11/.test(ua)
                 ? 'linux'
                 : null;
-        for (const panel of document.querySelectorAll('[data-downloads]')) {
-          const match = panel.querySelector(`[data-platform="${os}"]`);
-          if (!match) continue;
-          const primary = panel.querySelector('[data-primary]');
-          primary.hidden = false;
-          const link = primary.querySelector('a');
-          link.href = match.querySelector('a').href;
-          link.textContent = 'Download for ' + match.dataset.name;
+        if (!os) return;
+        for (const group of document.querySelectorAll('[data-os-switch]')) {
+          const matches = group.querySelectorAll(`[data-os="${os}"]`);
+          if (matches.length === 0) continue;
+          for (const el of group.querySelectorAll('[data-os-default]')) el.hidden = true;
+          for (const el of matches) el.hidden = false;
         }
       })();
     </script>
   </body>
 </html>
+
+<style>
+  .site-header {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    height: 69px;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .site-nav {
+    display: flex;
+    align-items: center;
+    gap: 26px;
+  }
+
+  .site-nav a:not(.button) {
+    color: var(--fg-muted);
+    transition: color 120ms ease;
+  }
+
+  .site-nav a:not(.button):hover,
+  .site-nav a[aria-current='page'] {
+    color: var(--fg);
+  }
+
+  .site-footer {
+    margin-top: 96px;
+    border-top: 1px solid var(--border);
+    color: var(--fg-muted);
+    font-size: 13px;
+  }
+
+  .site-footer__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px 24px;
+    min-height: 84px;
+    padding-block: 20px;
+  }
+
+  .site-footer__brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .site-footer__links {
+    display: flex;
+    gap: 22px;
+  }
+
+  .site-footer a:hover {
+    color: var(--fg);
+  }
+
+  .site-nav a {
+    white-space: nowrap;
+  }
+
+  @media (max-width: 420px) {
+    .site-header__inner {
+      gap: 12px;
+    }
+
+    .site-nav {
+      gap: 14px;
+      font-size: 14px;
+    }
+
+    .site-nav .button {
+      padding-inline: 10px;
+    }
+  }
+</style>

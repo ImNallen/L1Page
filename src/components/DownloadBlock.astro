@@ -1,0 +1,76 @@
+---
+import Icon from './Icon.astro';
+import { buildName, formatDate, latestRelease, listPlatforms, type Product } from '../data/products';
+
+type Props = { product: Product };
+
+const { product } = Astro.props;
+const release = latestRelease(product);
+---
+
+<div class="block">
+  {
+    release ? (
+      <>
+        <p class="block__meta">
+          <span class="mono">v{release.version}</span>
+          <span class="muted">Released {formatDate(release.date)}</span>
+        </p>
+        <ul class="builds" role="list">
+          {release.downloads.map((d) => (
+            <li class="build">
+              <span>{buildName(d)}</span>
+              <a class="button" href={d.url} aria-label={`Download ${product.name} for ${buildName(d)}`}>
+                <Icon name="download" />
+                Download
+              </a>
+            </li>
+          ))}
+        </ul>
+      </>
+    ) : (
+      <>
+        <p class="block__meta">
+          <span class="soon">Coming soon</span>
+        </p>
+        <p class="muted">
+          {product.name} has no release yet. Builds for {listPlatforms(product.platforms)} will be listed here.
+        </p>
+      </>
+    )
+  }
+</div>
+
+<style>
+  .block {
+    padding: 20px 24px;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-lg);
+    background: var(--bg-raised);
+  }
+
+  .block__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 16px;
+    margin-bottom: 8px;
+  }
+
+  .soon {
+    font-weight: 500;
+  }
+
+  .builds {
+    margin-top: 8px;
+  }
+
+  .build {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-block: 12px;
+    border-top: 1px solid var(--border);
+  }
+</style>

@@ -1,0 +1,105 @@
+---
+import AppTile from './AppTile.astro';
+import { formatDate, type ProductRelease } from '../data/products';
+
+type Props = { entries: ProductRelease[]; showApp?: boolean };
+
+const { entries, showApp = false } = Astro.props;
+---
+
+<ol class="releases" role="list">
+  {
+    entries.map(({ product, release }) => (
+      <li class="release">
+        <p class="release__date muted">
+          <time datetime={release.date}>{formatDate(release.date)}</time>
+        </p>
+        <div>
+          <h3 class="release__title">
+            {showApp && (
+              <a class="release__app" href={`/${product.slug}/`}>
+                <AppTile icon={product.icon} size={24} />
+                {product.name}
+              </a>
+            )}
+            <span class="mono">v{release.version}</span>
+          </h3>
+          <ul class="release__notes">
+            {release.notes.map((note) => (
+              <li>{note}</li>
+            ))}
+          </ul>
+          <p class="release__more">
+            <a class="link" href={`/${product.slug}/#download`}>
+              Download {product.name} {release.version}
+            </a>
+          </p>
+        </div>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .releases {
+    border-top: 1px solid var(--border);
+  }
+
+  .release {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 8px 24px;
+    padding-block: 32px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .release__date {
+    padding-top: 2px;
+  }
+
+  .release__title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+    font-size: 17px;
+    font-weight: 500;
+  }
+
+  .release__title .mono {
+    color: var(--fg-muted);
+    font-size: 14px;
+  }
+
+  .release__app {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .release__app:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .release__notes {
+    margin-top: 12px;
+    padding-left: 20px;
+    list-style: disc;
+  }
+
+  .release__notes li + li {
+    margin-top: 4px;
+  }
+
+  .release__more {
+    margin-top: 16px;
+  }
+
+  @media (max-width: 640px) {
+    .release {
+      grid-template-columns: 1fr;
+      padding-block: 24px;
+    }
+  }
+</style>

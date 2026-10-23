@@ -3,14 +3,27 @@ import Base from '../layouts/Base.astro';
 ---
 
 <Base title="Page not found | L1 Software" description="There is no page at this address." indexable={false}>
-  <section class="hero hero--compact wrap" aria-labelledby="hero-title">
-    <h1 id="hero-title" class="display">Page not found</h1>
-    <div class="hero__aside">
-      <p class="lede">The lookup for this address returned 0 rows. The link may be old or mistyped.</p>
-      <p class="actions">
-        <a class="button button--primary" href="/">Go to the home page</a>
-        <a class="button" href="/download/">Downloads</a>
-      </p>
-    </div>
+  <section class="wrap page-head page-head--center" aria-labelledby="hero-title">
+    <p class="mono muted">404</p>
+    <h1 id="hero-title">Page not found</h1>
+    <p class="muted">There is no page at this address. The link may be old or mistyped.</p>
+    <p class="actions__buttons">
+      <a class="button button--primary button--lg" href="/">Go to the home page</a>
+      <a class="button button--lg" href="/release-notes/">Release notes</a>
+    </p>
   </section>
 </Base>
+
+<style>
+  .page-head--center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-block: 120px 24px;
+    text-align: center;
+  }
+
+  .actions__buttons {
+    margin-top: 32px;
+  }
+</style>

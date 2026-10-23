@@ -1,0 +1,44 @@
+---
+import Icon from './Icon.astro';
+import { listPlatforms, platformName, primaryBuilds, type Product, type Release } from '../data/products';
+
+type Props = { product: Product; release: Release };
+
+const { product, release } = Astro.props;
+const builds = primaryBuilds(release);
+const others = (d: (typeof builds)[number]) => builds.filter((b) => b !== d).map((b) => b.platform);
+---
+
+<div class="actions" data-os-switch>
+  <div class="actions__buttons">
+    <a class="button button--primary button--lg" href={`/${product.slug}/#download`} data-os-default>
+      <Icon name="download" />
+      Download {product.name}
+    </a>
+    {
+      builds.map((d) => (
+        <a
+          class="button button--primary button--lg"
+          href={d.url}
+          data-os={d.platform}
+          aria-label={`Download ${product.name} for ${platformName[d.platform]}`}
+          hidden
+        >
+          <Icon name="download" />
+          Download for {platformName[d.platform]}
+        </a>
+      ))
+    }
+    <slot />
+  </div>
+  <p class="actions__note" data-os-default>
+    {product.name} {release.version} for {listPlatforms(builds.map((d) => d.platform))}.
+  </p>
+  {
+    builds.map((d) => (
+      <p class="actions__note" data-os={d.platform} hidden>
+        {product.name} {release.version}.{others(d).length > 0 && ` Also for ${listPlatforms(others(d))}.`}
+      </p>
+    ))
+  }
+</div>
