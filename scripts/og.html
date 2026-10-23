@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      @font-face {
+        font-family: 'Inter Variable';
+        font-weight: 100 900;
+        src: url(../node_modules/@fontsource-variable/inter/files/inter-latin-opsz-normal.woff2) format('woff2-variations');
+      }
+
+      html,
+      body {
+        margin: 0;
+        width: 1200px;
+        height: 630px;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-sizing: border-box;
+        padding: 72px 80px;
+        background: #0a0a0a;
+        color: #f5f5f5;
+        font-family: 'Inter Variable', sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .logo {
+        display: grid;
+        place-items: center;
+        width: 64px;
+        height: 64px;
+        border-radius: 15px;
+        background: #f5f5f5;
+      }
+
+      .logo img {
+        width: 48px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 84px;
+        font-weight: 600;
+        line-height: 1.04;
+        letter-spacing: -0.045em;
+      }
+
+      .foot {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: #8f8f8f;
+        font-size: 26px;
+        letter-spacing: -0.01em;
+      }
+
+      .apps {
+        display: flex;
+        gap: 14px;
+      }
+
+      .apps img {
+        width: 56px;
+        height: 56px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="logo"><img src="../src/assets/logo/lone-mark-black.svg" alt="" /></div>
+    <h1>Every L1 app,<br />in one place</h1>
+    <div class="foot">
+      <span>l1software.app</span>
+      <span class="apps">
+        <img src="../src/assets/icons/l1-data.svg" alt="" />
+        <img src="../src/assets/icons/l1-git.svg" alt="" />
+        <img src="../src/assets/icons/l1-code.svg" alt="" />
+      </span>
+    </div>
+  </body>
+</html>
