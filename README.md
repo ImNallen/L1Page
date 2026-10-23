@@ -1,6 +1,6 @@
 # L1Page
 
-The website for L1 Software at [l1software.app](https://l1software.app). It lists the L1 desktop apps and hosts their download pages. It is a static [Astro](https://astro.build) site, deployed to GitHub Pages.
+The website for L1 Software at [l1software.app](https://l1software.app). It lists the L1 desktop apps, their downloads, and their release notes. It is a static [Astro](https://astro.build) site, deployed to GitHub Pages.
 
 ## Run it locally
 
@@ -16,42 +16,46 @@ pnpm check      # type-checks .astro and .ts files
 
 ## Where the content lives
 
-`src/data/products.ts` is the product registry. The home page table, each product page, and `/download/` all read from it. Each product gets a page at `/<slug>/`.
+`src/data/products.ts` is the app registry. The home page, each app page at `/<slug>/`, `/download/`, and `/release-notes/` all read from it. The order of the `products` array is the display order. `featured` names the app shown in the home page hero.
 
-The `availability` field has two shapes:
+Each product has a `releases` list, newest first. An empty list means the app is not released yet. The site then shows "Coming soon" and no download buttons. A release has a `version`, an ISO `date`, at least one line of `notes`, and at least one build in `downloads`. TypeScript rejects a release without notes or downloads.
 
-- `{ kind: 'coming-soon', platforms }` shows a "Not released yet" state and the planned platforms.
-- `{ kind: 'available', version, releasedAt, releaseNotesUrl, downloads }` lists every build and promotes the build that matches the visitor's operating system.
+Assets live in `src/assets/`:
 
-TypeScript rejects a released product without downloads and an unreleased product with a version.
+- `icons/` holds the app tiles from the L1 logo kit.
+- `logo/` holds the black and white L1 marks for the header and footer.
+- `screenshots/` holds app screenshots. Astro resizes them at build time.
 
-## Add a product
+Colors are CSS custom properties at the top of `src/styles/global.css`, with one set for light mode and one for dark mode. The site follows the visitor's system setting.
 
-1. Add an entry to the `products` array in `src/data/products.ts`. Give it a `slug`, a `name`, a one-sentence `tagline`, a `summary`, `features`, and an `availability`.
-2. Run `pnpm build` and open `/<slug>/` with `pnpm preview`.
+## Add an app
 
-A product page shows a hero visual only if one is registered. To add one, create a component in `src/components/` and add it to the `visuals` map in `src/pages/[slug]/index.astro`. `AppMock.astro` is the visual for L1 Data.
+1. Add its tile to `src/assets/icons/` and, if you have one, a screenshot to `src/assets/screenshots/`.
+2. Add an entry to `src/data/products.ts` with a `slug`, `name`, one-sentence `tagline`, `summary`, `icon`, optional `screenshot` with alt text, `platforms`, `features`, and `releases: []`. Add it to the `products` array.
+3. Run `pnpm check` and `pnpm build`, then open `/<slug>/` with `pnpm preview`.
 
 ## Publish a release
 
 GitHub Pages hosts this site, not the app binaries. Pages has a 1 GB site limit and is not meant for large files. Put the installers on a GitHub Release in the app's own repository, and link to them from the registry.
 
 1. Create a GitHub Release for the app, for example tag `v1.0.0`, and upload the installers as release assets.
-2. In `src/data/products.ts`, change the product's `availability` to `kind: 'available'`:
+2. In `src/data/products.ts`, add the release to the front of the app's `releases` list:
 
 	```ts
-	availability: {
-		kind: 'available',
-		version: '1.0.0',
-		releasedAt: '2026-11-02',
-		releaseNotesUrl: 'https://github.com/<owner>/<repo>/releases/tag/v1.0.0',
-		downloads: [
-			{ platform: 'macos', arch: 'universal', format: 'dmg', url: 'https://github.com/<owner>/<repo>/releases/download/v1.0.0/L1-Data-1.0.0.dmg' },
-			{ platform: 'windows', arch: 'x64', format: 'msi', url: '...' },
-			{ platform: 'linux', arch: 'x64', format: 'AppImage', url: '...' },
-			{ platform: 'linux', arch: 'x64', format: 'deb', url: '...' },
-		],
-	},
+	releases: [
+		{
+			version: '1.0.0',
+			date: '2026-11-02',
+			notes: ['First release.'],
+			downloads: [
+				{ platform: 'macos', arch: 'universal', format: 'dmg', url: 'https://github.com/<owner>/<repo>/releases/download/v1.0.0/L1-Data-1.0.0.dmg' },
+				{ platform: 'windows', arch: 'x64', format: 'msi', url: '...' },
+				{ platform: 'linux', arch: 'x64', format: 'AppImage', url: '...' },
+				{ platform: 'linux', arch: 'x64', format: 'deb', url: '...' },
+			],
+		},
+		...older releases
+	],
 	```
 
 3. Run `pnpm check` and `pnpm build`.
@@ -59,7 +63,11 @@ GitHub Pages hosts this site, not the app binaries. Pages has a 1 GB site limit 
 
 Use the versioned asset URL (`/releases/download/<tag>/<file>`), so the version on the page and the file it links to always match.
 
-The download section promotes the first build in `downloads` that matches the visitor's platform. A browser cannot reliably tell Apple silicon from Intel, so list a `universal` or `arm64` macOS build before an `x64` one. Without JavaScript, the page lists every build.
+The download buttons offer the first build in `downloads` that matches the visitor's platform. A browser cannot reliably tell Apple silicon from Intel, so list a `universal` or `arm64` macOS build before an `x64` one. Without JavaScript, the buttons link to the app page, which lists every build.
+
+## Social preview image
+
+`public/og.png` is a 1200 by 630 screenshot of `scripts/og.html`. After you change that file, open it in a browser at that size and save a screenshot over `public/og.png`.
 
 ## Deployment
 
