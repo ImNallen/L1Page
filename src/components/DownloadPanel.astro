@@ -42,7 +42,8 @@ const formatDate = (iso: string) =>
                   Download
                 </a>
               </p>
-              <ul class="builds" aria-label={`${product.name} builds`}>
+              <h3>All builds</h3>
+              <ul class="builds">
                 {availability.downloads.map((d) => (
                   <li data-platform={d.platform} data-name={buildName(d)}>
                     <a href={d.url}>{buildName(d)}</a>

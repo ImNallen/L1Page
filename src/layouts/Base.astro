@@ -89,12 +89,10 @@ const nav = [
                 ? 'linux'
                 : null;
         for (const panel of document.querySelectorAll('[data-downloads]')) {
-          const primary = panel.querySelector('[data-primary]');
-          const builds = panel.querySelectorAll('[data-platform]');
-          const match = [...builds].find((b) => b.dataset.platform === os);
-          builds.forEach((b) => (b.hidden = b === match));
-          primary.hidden = !match;
+          const match = panel.querySelector(`[data-platform="${os}"]`);
           if (!match) continue;
+          const primary = panel.querySelector('[data-primary]');
+          primary.hidden = false;
           const link = primary.querySelector('a');
           link.href = match.querySelector('a').href;
           link.textContent = 'Download for ' + match.dataset.name;

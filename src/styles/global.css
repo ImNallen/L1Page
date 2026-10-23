@@ -12,7 +12,7 @@
   --m-editor: #1a2530;
   --m-line: #2b3a48;
   --m-text: #ccd6df;
-  --m-dim: #7d8e9c;
+  --m-dim: #8797a5;
   --m-kw: #8db6ff;
   --m-str: #b8d98c;
   --m-num: #f0b77e;
@@ -514,6 +514,10 @@ h3 {
   font-size: 1.125rem;
 }
 
+.downloads__available h3 {
+  margin-bottom: -0.5rem;
+}
+
 .builds {
   border-top: 2px solid var(--ink);
 }
@@ -660,7 +664,7 @@ h3 {
   display: inline-block;
   width: 2ch;
   margin-right: 1.4rem;
-  color: #4f6070;
+  color: #5d6f80;
   text-align: right;
 }
 
@@ -718,7 +722,7 @@ h3 {
 }
 
 .mock__results .rn {
-  color: #4f6070;
+  color: #5d6f80;
   text-align: right;
 }
 
