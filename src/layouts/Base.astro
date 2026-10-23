@@ -76,18 +76,6 @@ const nav = [
     <main id="main">
       <slot />
     </main>
-    <footer class="site-footer">
-      <div class="wrap site-footer__inner">
-        <a class="site-footer__brand" href="/">
-          <Logo size={20} />
-          l1software.app
-        </a>
-        <ul class="site-footer__links" role="list">
-          {nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
-          <li><a href="/download/">Download</a></li>
-        </ul>
-      </div>
-    </footer>
     <script is:inline>
       (() => {
         const ua = navigator.userAgent;
@@ -144,37 +132,6 @@ const nav = [
 
   .site-nav a:not(.button):hover,
   .site-nav a[aria-current='page'] {
-    color: var(--fg);
-  }
-
-  .site-footer {
-    margin-top: 96px;
-    color: var(--fg-muted);
-    font-size: 13px;
-  }
-
-  .site-footer__inner {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px 24px;
-    min-height: 84px;
-    padding-block: 20px;
-  }
-
-  .site-footer__brand {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .site-footer__links {
-    display: flex;
-    gap: 22px;
-  }
-
-  .site-footer a:hover {
     color: var(--fg);
   }
 
