@@ -16,7 +16,7 @@ export type Availability =
       version: string;
       releasedAt: string;
       releaseNotesUrl: string;
-      downloads: Download[];
+      downloads: [Download, ...Download[]];
     };
 
 export type Feature = { title: string; body: string };
