@@ -3,18 +3,20 @@ import '@fontsource-variable/archivo/wdth.css';
 import '@fontsource-variable/martian-mono/wdth.css';
 import '../styles/global.css';
 import Wordmark from '../components/Wordmark.astro';
+import { products } from '../data/products';
 
 type Props = {
   title: string;
   description: string;
+  indexable?: boolean;
 };
 
-const { title, description } = Astro.props;
+const { title, description, indexable = true } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = new URL('/og.png', Astro.site);
 const path = Astro.url.pathname;
 const nav = [
-  { href: '/data/', label: 'L1 Data' },
+  ...products.map((p) => ({ href: `/${p.slug}/`, label: p.name })),
   { href: '/download/', label: 'Download' },
 ];
 ---
@@ -26,7 +28,7 @@ const nav = [
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
+    {indexable ? <link rel="canonical" href={canonical} /> : <meta name="robots" content="noindex" />}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="theme-color" content="#e8ecef" />
