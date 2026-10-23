@@ -3,21 +3,10 @@ import Base from '../layouts/Base.astro';
 import AppMock from '../components/AppMock.astro';
 import ProductTable from '../components/ProductTable.astro';
 import FeatureList from '../components/FeatureList.astro';
-import { assertNever, products, statusLabel } from '../data/products';
+import { featured as first, latestRelease } from '../data/products';
 
-const [first] = products;
-if (!first) throw new Error('The product registry is empty.');
-
-const firstStatus = (() => {
-  switch (first.availability.kind) {
-    case 'coming-soon':
-      return 'It is still in development.';
-    case 'available':
-      return `Version ${first.availability.version} is out now.`;
-    default:
-      return assertNever(first.availability);
-  }
-})();
+const release = latestRelease(first);
+const firstStatus = release ? `Version ${release.version} is out now.` : 'It is still in development.';
 ---
 
 <Base
@@ -54,7 +43,7 @@ const firstStatus = (() => {
     <div class="section__head">
       <h2 id="first-title">{first.name}</h2>
       <p>{first.summary}</p>
-      <p class="tag" data-kind={first.availability.kind}>{statusLabel(first.availability)}</p>
+      <p class="tag">{release ? `Version ${release.version}` : 'Not released yet'}</p>
     </div>
     <FeatureList features={first.features.slice(0, 4)} />
     <p><a class="more" href={`/${first.slug}/`}>Everything in {first.name}</a></p>

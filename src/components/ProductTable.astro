@@ -1,5 +1,5 @@
 ---
-import { platformName, platformsOf, products, statusLabel } from '../data/products';
+import { latestRelease, listPlatforms, products } from '../data/products';
 
 const count = products.length;
 ---
@@ -24,8 +24,8 @@ const count = products.length;
               <a href={`/${p.slug}/`}>{p.name}</a>
             </th>
             <td data-label="What it is">{p.tagline}</td>
-            <td data-label="Platforms">{platformsOf(p.availability).map((x) => platformName[x]).join(', ')}</td>
-            <td data-label="Status">{statusLabel(p.availability)}</td>
+            <td data-label="Platforms">{listPlatforms(p.platforms)}</td>
+            <td data-label="Status">{latestRelease(p) ? `Version ${latestRelease(p)?.version}` : 'Not released yet'}</td>
           </tr>
         ))
       }

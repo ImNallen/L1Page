@@ -4,7 +4,7 @@ import Base from '../../layouts/Base.astro';
 import AppMock from '../../components/AppMock.astro';
 import FeatureList from '../../components/FeatureList.astro';
 import DownloadPanel from '../../components/DownloadPanel.astro';
-import { products, statusLabel, type Product } from '../../data/products';
+import { latestRelease, products, type Product } from '../../data/products';
 
 export const getStaticPaths = (() =>
   products.map((product) => ({ params: { slug: product.slug }, props: { product } }))) satisfies GetStaticPaths;
@@ -22,7 +22,7 @@ const Visual = visuals[product.slug];
     <div class="hero__aside">
       <p class="hero__tagline">{product.tagline}</p>
       <p class="lede">{product.summary}</p>
-      <p class="tag" data-kind={product.availability.kind}>{statusLabel(product.availability)}</p>
+      <p class="tag">{latestRelease(product) ? `Version ${latestRelease(product)?.version}` : 'Not released yet'}</p>
       <p class="actions">
         <a class="button button--primary" href="#download">Downloads and platforms</a>
       </p>
